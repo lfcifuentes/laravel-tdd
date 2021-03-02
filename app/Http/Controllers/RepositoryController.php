@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Repository;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
@@ -41,13 +42,17 @@ class RepositoryController extends Controller
 	{
 
 	}
-	public function edit()
+	public function edit(Repository $repository)
 	{
 
 	}
-	public function update(Request $request)
+	public function update(Request $request, Repository $repository)
 	{
+		$repository->update($request->all());
 
+		return redirect()->route('repositories.edit',[
+			'repository' => $repository->id
+		]);
 	}
 
 	public function destroy(Request $request)
