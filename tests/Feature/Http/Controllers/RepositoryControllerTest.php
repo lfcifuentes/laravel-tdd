@@ -15,12 +15,13 @@ class RepositoryControllerTest extends TestCase
      */
     public function test_guest()
     {
-        $this->get('repositories')->assertRedirect('login');
-        $this->get('repositories/1')->assertRedirect('login');
-        $this->get('repositories/1/edit')->assertRedirect('login');
-        $this->put('repositories/1')->assertRedirect('login');
-        $this->delete('repositories/1')->assertRedirect('login');
-        $this->get('repositories/create')->assertRedirect('login');
-        $this->post('repositories', [])->assertRedirect('login');
+        // Validar los accesos a las rutas
+        $this->get('repositories')->assertRedirect('login');        // index
+        $this->get('repositories/1')->assertRedirect('login');      // show
+        $this->get('repositories/1/edit')->assertRedirect('login'); // edit
+        $this->put('repositories/1')->assertRedirect('login');      // update
+        $this->delete('repositories/1')->assertRedirect('login');   // delete
+        $this->get('repositories/create')->assertRedirect('login'); // create
+        $this->post('repositories', [])->assertRedirect('login');   // store
     }
 }
