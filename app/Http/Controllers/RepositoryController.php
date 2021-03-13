@@ -83,6 +83,10 @@ class RepositoryController extends Controller
 	 */
 	public function destroy(Request $request, Repository $repository)
 	{
+		if($request->user()->id != $repository->user_id){
+			abort(403);
+		}
+
 		// eliminar repositorio
 		$repository->delete();
 		// redireccionar

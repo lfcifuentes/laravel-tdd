@@ -163,4 +163,20 @@ class RepositoryControllerTest extends TestCase
 			'description' => $repository->description,
 		]);
 	}
+	/**
+	 * Test to delete only my repositories
+	 */
+	public function test_delete_policy()
+	{
+		// crear usuario fake que envia los datos
+		$user = User::factory()->create();
+		// crear repositorio fake
+		$repository = Repository::factory()->create();
+		
+		// enviar acción de borrado
+		$this
+			->actingAs($user)
+			->delete("repositories/{$repository->id}")
+			->assertStatus(403);
+	}
 }
