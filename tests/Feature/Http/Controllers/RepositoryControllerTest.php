@@ -78,7 +78,7 @@ class RepositoryControllerTest extends TestCase
 			->put("repositories/{$repository->id}", $data)
 			->assertRedirect("repositories/{$repository->id}/edit");
 
-		// validar que si se actualizaron 	los datos
+		// validar que si se actualizaron los datos
 		$this->assertDatabaseHas('repositories', $data);
 	}
 }

@@ -50,9 +50,7 @@ class RepositoryController extends Controller
 	{
 		$repository->update($request->all());
 
-		return redirect()->route('repositories.edit',[
-			'repository' => $repository->id
-		]);
+		return redirect()->route('repositories.edit', $repository);
 	}
 
 	public function destroy(Request $request)
