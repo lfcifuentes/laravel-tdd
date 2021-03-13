@@ -119,6 +119,26 @@ class RepositoryControllerTest extends TestCase
 			]);
 	}
 	/**
+	 * Test to update only my repositories
+	 */
+	public function test_update_policy()
+	{
+		// crear usuario fake que envia los datos
+		$user = User::factory()->create();
+		// crear repositorio fake
+		$repository = Repository::factory()->create();
+		// datos fake para llenar el repositorio
+		$data = [
+			'url' => $this->faker->url,
+			'description' => $this->faker->text,
+		];
+		// enviar datos
+		$this
+			->actingAs($user)
+			->put("repositories/{$repository->id}", $data)
+			->assertStatus(403);
+	}
+	/**
 	 * Test for delete repository
 	 */
 	public function test_delete()
