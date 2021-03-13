@@ -55,31 +55,44 @@ class RepositoryControllerTest extends TestCase
 		$this->assertDatabaseHas('repositories', $data);
 
 	}
+	/**
+	 * test to verify repository save validations
+	 * @return void
+	 */
+	public function test_validate_store()
+	{
+		// usuario
+		$user = User::factory()->create();
+
+		// validar
+		$this
+			->actingAs($user)				// setear usuario que hace la acción
+			->post('repositories', [])		// hacer el post
+			->assertStatus(302)				// validar la redirección al index
+			->assertSessionHasErrors([
+				'url','description'
+			]);
+
+	}
 
 	/**
 	 * Test for update repository
 	 */
-	public function test_update()
+	public function test_validate_update()
 	{
-		$this->withoutExceptionHandling();
-
 		// crear usuario fake que envia los datos
 		$user = User::factory()->create();
 		// crear repositorio fake
 		$repository = Repository::factory()->create(['user_id' => $user->id]);
-		// datos fake para llenar el repositorio
-		$data = [
-			'url' => $this->faker->url,
-			'description' => $this->faker->text,
-		];
+		
 		// enviar datos
 		$this
 			->actingAs($user)
-			->put("repositories/{$repository->id}", $data)
-			->assertRedirect("repositories/{$repository->id}/edit");
-
-		// validar que si se actualizaron los datos
-		$this->assertDatabaseHas('repositories', $data);
+			->put("repositories/{$repository->id}", [])
+			->assertStatus(302)				// validar la redirección al index
+			->assertSessionHasErrors([
+				'url','description'
+			]);
 	}
 	/**
 	 * Test for delete repository
