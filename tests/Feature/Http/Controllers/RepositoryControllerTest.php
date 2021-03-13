@@ -74,7 +74,31 @@ class RepositoryControllerTest extends TestCase
 			]);
 
 	}
+	/**
+	 * Test for update repository
+	 */
+	public function test_update()
+	{
+		$this->withoutExceptionHandling();
 
+		// crear usuario fake que envia los datos
+		$user = User::factory()->create();
+		// crear repositorio fake
+		$repository = Repository::factory()->create(['user_id' => $user->id]);
+		// datos fake para llenar el repositorio
+		$data = [
+			'url' => $this->faker->url,
+			'description' => $this->faker->text,
+		];
+		// enviar datos
+		$this
+			->actingAs($user)
+			->put("repositories/{$repository->id}", $data)
+			->assertRedirect("repositories/{$repository->id}/edit");
+
+		// validar que si se actualizaron los datos
+		$this->assertDatabaseHas('repositories', $data);
+	}
 	/**
 	 * Test for update repository
 	 */
