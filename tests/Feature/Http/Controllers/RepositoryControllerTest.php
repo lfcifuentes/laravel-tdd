@@ -81,4 +81,29 @@ class RepositoryControllerTest extends TestCase
 		// validar que si se actualizaron los datos
 		$this->assertDatabaseHas('repositories', $data);
 	}
+	/**
+	 * Test for delete repository
+	 */
+	public function test_delete()
+	{
+		$this->withoutExceptionHandling();
+
+		// crear usuario fake que envia los datos
+		$user = User::factory()->create();
+		// crear repositorio fake
+		$repository = Repository::factory()->create(['user_id' => $user->id]);
+		
+		// enviar acción de borrado
+		$this
+			->actingAs($user)
+			->delete("repositories/{$repository->id}")
+			->assertRedirect("repositories");
+
+		// validar que si se booro el registro
+		$this->assertDatabaseMissing('repositories', [
+			'id' => $repository->id,
+			'url' => $repository->url,
+			'description' => $repository->description,
+		]);
+	}
 }

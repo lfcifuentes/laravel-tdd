@@ -21,12 +21,15 @@ class RepositoryController extends Controller
     }
 
 	/**
-	 *
+	 * 
 	 */
 	public function create()
 	{
 
 	}
+	/**
+	 * Receive data for store in database
+	 */
 	public function store(Request $request)
 	{
 		$request
@@ -38,23 +41,37 @@ class RepositoryController extends Controller
 
 		return redirect()->route('repositories.index');
 	}
+	/**
+	 * 
+	 */
 	public function show()
 	{
 
 	}
+	/**
+	 * 
+	 */
 	public function edit(Repository $repository)
 	{
 
 	}
+	/**
+	 * Receive data for repository update
+	 */
 	public function update(Request $request, Repository $repository)
 	{
 		$repository->update($request->all());
 
 		return redirect()->route('repositories.edit', $repository);
 	}
-
-	public function destroy(Request $request)
+	/**
+	 * Delete repository
+	 */
+	public function destroy(Request $request, Repository $repository)
 	{
-
+		// eliminar repositorio
+		$repository->delete();
+		// redireccionar
+		return redirect()->route('repositories.index');
 	}
 }
