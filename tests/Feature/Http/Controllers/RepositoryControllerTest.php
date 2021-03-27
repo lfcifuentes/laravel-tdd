@@ -27,6 +27,41 @@ class RepositoryControllerTest extends TestCase
 		$this->get('repositories/create')->assertRedirect('login'); // create
 		$this->post('repositories', [])->assertRedirect('login');   // store
 	}
+	/**
+	 * Test for repositories list
+	 */
+	public function test_index_empty()
+	{
+		// creo repositios para otro usuario
+		Repository::factory()->create();
+		// creo un usuario
+		$user = User::factory()->create();
+
+		$this
+			->actingAs($user)
+			->get('repositories')
+			->assertStatus(200)
+			->assertSee("No hay repositorios creados")
+			;
+	}
+	/**
+	 * Test for repositories list
+	 */
+	public function test_index_with_data()
+	{
+		// creo un usuario
+		$user = User::factory()->create();
+		// creo repositios para otro usuario
+		Repository::factory()->create([
+			'user_id' => $user->id
+		]);
+
+		$this
+			->actingAs($user)
+			->get('repositories')
+			->assertStatus(200)
+			;
+	}
 
 	/**
 	 * Test for create repository
