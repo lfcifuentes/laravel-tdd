@@ -13,6 +13,7 @@
                         <tr>
                             <th>ID</th>
                             <th>Enlace</th>
+                            <th>Acciones</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -20,10 +21,15 @@
                         <tr>
                             <td class="border px-4 py-2">{{ $repository->id }}</td>
                             <td class="border px-4 py-2">{{ $repository->url }}</td>
+                            <td>
+                                <a href="{{ route('repositories.show', $repository) }}">
+                                    Ver
+                                </a>
+                            </td>
                         </tr>
                         @empty
                         <tr>
-                            <td colspan="2">
+                            <td colspan="3">
                                 <div class="bg-blue-200 p-2rounded ">
                                     No hay repositorios creados
                                 </div>
