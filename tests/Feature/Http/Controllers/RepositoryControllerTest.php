@@ -62,7 +62,19 @@ class RepositoryControllerTest extends TestCase
 			->assertStatus(200)
 			;
 	}
+	/**
+	 * Test for create reporitory form
+	 */
+	public function test_create()
+	{
+		// crear usuario fake que envia los datos
+		$user = User::factory()->create();
 
+		$this
+			->actingAs($user)
+			->get('repositories/create')
+			->assertStatus(200);
+	}
 	/**
 	 * Test for create repository
 	 * @return void
@@ -82,7 +94,7 @@ class RepositoryControllerTest extends TestCase
 
 		// validar
 		$this
-			->actingAs($user)						// setear usuario que hace la acción
+			->actingAs($user)					// setear usuario que hace la acción
 			->post('repositories', $data)		// hacer el post
 			->assertRedirect('repositories');	// validar la redirección al index
 
@@ -108,6 +120,76 @@ class RepositoryControllerTest extends TestCase
 				'url','description'
 			]);
 
+	}
+	/**
+	 * Test for show repository
+	 * */
+	public function test_show()
+	{
+		// crear usuario fake que envia los datos
+		$user = User::factory()->create();
+
+		// crear repositorio fake
+		$repository = Repository::factory()->create([
+			'user_id' => $user->id
+		]);
+
+		$this
+			->actingAs($user)
+			->get("repositories/".$repository->id)
+			->assertStatus(200);
+	}
+	/**
+	 * Test for show only my repository
+	 * */
+	public function test_show_policy()
+	{
+		// crear usuario fake que envia los datos
+		$user = User::factory()->create();
+
+		// crear repositorio fake
+		$repository = Repository::factory()->create();
+
+		$this
+			->actingAs($user)
+			->get("repositories/".$repository->id)
+			->assertStatus(403);
+	}
+	/**
+	 * Test for edit repository
+	 */
+	public function test_edit()
+	{
+		// crear usuario fake que envia los datos
+		$user = User::factory()->create();
+
+		// crear repositorio fake
+		$repository = Repository::factory()->create([
+			'user_id' => $user->id
+		]);
+
+		$this
+			->actingAs($user)
+			->get("repositories/$repository->id/edit")
+			->assertStatus(200)
+			->assertSee($repository->description)
+			->assertSee($repository->url);
+	}
+	/**
+	 * Test for edit repository
+	 */
+	public function test_edit_policy()
+	{
+		// crear usuario fake que envia los datos
+		$user = User::factory()->create();
+
+		// crear repositorio fake
+		$repository = Repository::factory()->create();
+
+		$this
+			->actingAs($user)
+			->get("repositories/$repository->id/edit")
+			->assertStatus(403);
 	}
 	/**
 	 * Test for update repository
@@ -213,80 +295,5 @@ class RepositoryControllerTest extends TestCase
 			->actingAs($user)
 			->delete("repositories/{$repository->id}")
 			->assertStatus(403);
-	}
-	/**
-	 * Test for show repository
-	 * */
-	public function test_show()
-	{
-		$user = User::factory()->create();
-
-		$repository = Repository::factory()->create([
-			'user_id' => $user->id
-		]);
-
-		$this
-			->actingAs($user)
-			->get("repositories/".$repository->id)
-			->assertStatus(200);
-	}
-	/**
-	 * Test for show only my repository
-	 * */
-	public function test_show_policy()
-	{
-		$user = User::factory()->create();
-
-		$repository = Repository::factory()->create();
-
-		$this
-			->actingAs($user)
-			->get("repositories/".$repository->id)
-			->assertStatus(403);
-	}
-	/**
-	 * Test for edit repository
-	 */
-	public function test_edit()
-	{
-		$user = User::factory()->create();
-
-		$repository = Repository::factory()->create([
-			'user_id' => $user->id
-		]);
-
-		$this
-			->actingAs($user)
-			->get("repositories/$repository->id/edit")
-			->assertStatus(200)
-			->assertSee($repository->description)
-			->assertSee($repository->url);
-	}
-	
-	/**
-	 * Test for edit repository
-	 */
-	public function test_edit_policy()
-	{
-		$user = User::factory()->create();
-
-		$repository = Repository::factory()->create();
-
-		$this
-			->actingAs($user)
-			->get("repositories/$repository->id/edit")
-			->assertStatus(403);
-	}
-	/**
-	 * Test for create reporitory form
-	 */
-	public function test_create()
-	{
-		$user = User::factory()->create();
-
-		$this
-			->actingAs($user)
-			->get('repositories/create')
-			->assertStatus(200);
 	}
 }
