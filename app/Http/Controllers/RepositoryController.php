@@ -25,7 +25,7 @@ class RepositoryController extends Controller
 	 */
 	public function create()
 	{
-
+		return view('repositories.create');
 	}
 	/**
 	 * Receive data for store in database
