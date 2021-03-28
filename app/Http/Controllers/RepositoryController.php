@@ -58,12 +58,16 @@ class RepositoryController extends Controller
 		return view('repositories.show', \compact('repository'));
 	}
 	/**
-	 * 
+	 * Show repository edit form
 	 */
-	public function edit(Repository $repository)
-	{
+	public function edit(Request $request, Repository $repository)
+    {
+        if ($request->user()->id != $repository->user_id) {
+            abort(403);
+        }
 
-	}
+        return view('repositories.edit', compact('repository'));
+    }
 	/**
 	 * Receive data for repository update
 	 */
