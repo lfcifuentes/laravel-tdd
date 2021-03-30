@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Repository;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
+use App\Http\Requests\RepositoryRequest;
 
 class RepositoryController extends Controller
 {
@@ -30,13 +31,8 @@ class RepositoryController extends Controller
 	/**
 	 * Receive data for store in database
 	 */
-	public function store(Request $request)
+	public function store(RepositoryRequest $request)
 	{
-		$request->validate([
-			'url' => 'required',
-			'description' => 'required'
-		]);
-
 		$request
 			->user()
 			->repositories()
@@ -49,38 +45,30 @@ class RepositoryController extends Controller
 	/**
 	 * Show repository data
 	 */
-	public function show(Request $request, Repository $repository)
+	public function show(Repository $repository)
 	{
-		if($request->user()->id != $repository->user_id){
-			abort(403);
-		}
+		// check RepositoryPolicy
+		$this->authorize('pass', $repository);
 
 		return view('repositories.show', \compact('repository'));
 	}
 	/**
 	 * Show repository edit form
 	 */
-	public function edit(Request $request, Repository $repository)
+	public function edit(Repository $repository)
     {
-        if ($request->user()->id != $repository->user_id) {
-            abort(403);
-        }
+		// check RepositoryPolicy
+		$this->authorize('pass', $repository);
 
         return view('repositories.edit', compact('repository'));
     }
 	/**
 	 * Receive data for repository update
 	 */
-	public function update(Request $request, Repository $repository)
+	public function update(RepositoryRequest $request, Repository $repository)
 	{
-		$request->validate([
-			'url' => 'required',
-			'description' => 'required'
-		]);
-
-		if($request->user()->id != $repository->user_id){
-			abort(403);
-		}
+		// check RepositoryPolicy
+		$this->authorize('pass', $repository);
 
 		$repository->update($request->all());
 
@@ -89,11 +77,10 @@ class RepositoryController extends Controller
 	/**
 	 * Delete repository
 	 */
-	public function destroy(Request $request, Repository $repository)
+	public function destroy(Repository $repository)
 	{
-		if($request->user()->id != $repository->user_id){
-			abort(403);
-		}
+		// check RepositoryPolicy
+		$this->authorize('pass', $repository);
 
 		// eliminar repositorio
 		$repository->delete();
