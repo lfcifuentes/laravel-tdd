@@ -19,7 +19,7 @@
                 <li class="flex items-center text-black p-2 hover:bg-gray-300">
                     <img 
                         class="w-12 h-12 rounded-full mr-2"
-                        src="{{ $repository->user->profile_photo_path }}"
+                        src="{{ $repository->user->profile_photo_url }}"
                         alt="{{ $repository->user->name }}"
                     >
                     <div class="flex justify-between w-full">
@@ -28,7 +28,7 @@
                             <p>{{ $repository->description }}</p>
                         </div>
                         <span class="text-xs font-medium text-gray-600">
-                            {{ $repository->created_at }}
+                            {{ $repository->created_at->diffForHumans() }}
                         </span>
                     </div>
                 </li>
